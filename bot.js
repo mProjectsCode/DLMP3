@@ -29,6 +29,7 @@ let voiceChannel;
 let fileData;
 let randomAudio;
 let currentArgs;
+let volumeOverride = -1;
 
 bot.login(config.token);
 
@@ -113,7 +114,9 @@ function playFile(connection, loop, audio = null) {
     dispatcher = connection.play('./music/' + audio);
 
     dispatcher.on('start', () => {
-        dispatcher.setVolume(config.defaultVolume / 100);
+        if (volumeOverride == -1) {
+            dispatcher.setVolume(config.defaultVolume / 200);
+        }
         console.log('Now playing ' + audio);
         fileData = "Now Playing: " + audio;
         fs.writeFile("now-playing.txt", fileData, (err) => {
@@ -278,7 +281,8 @@ bot.on('message', async msg => {
 
         volume = parseInt(volume);
         if (volume >= 0 && volume <= 100) {
-            dispatcher.setVolume(volume / 100);
+            volumeOverride = volume;
+            dispatcher.setVolume(volume / 200);
             msg.reply('Changed volume to ' + volume.toString() + '.');
             console.log('Changed volume to ' + volume.toString() + '.');
         } else {
