@@ -3,6 +3,9 @@
 *  DLMP3 Bot: A Discord bot that plays local mp3 audio tracks.
 *  (C) Copyright 2020
 *  Programmed by Andrew Lee 
+*
+*  (C) Copyright 2021
+*  Modified by Moritz Jung
 *  
 *  This program is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -18,6 +21,7 @@
 *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 * 
 ***************************************************************************/
+
 const Discord = require('discord.js');
 const fs = require('fs');
 const { off } = require('process');
@@ -92,26 +96,18 @@ class LemonMusicBot {
     }
 
     async joinVoiceByUser(user) {
-        this.bot.guilds.cache.forEach(guild => {
-            // console.log(guild.name);
-            guild.channels.cache.forEach(channel => {
-                //console.log(channel.name);
-                if (channel.type == 'voice') {
-                    // console.log(channel.name);
-                    channel.members.forEach(member => {
-                        if (member.id == user.id) {
-                            // console.log(channel);
-                            channel.join().then(connection => {
-                                this.channelConnection = connection;
-                                return;
-                            }).catch(e => {
-                                console.error(e);
-                            });;
-                        }
-                    });
-                }
-            });
-        });
+        for (const guild of this.bot.guilds.cache) {
+            // Dont touch this. It works.
+            let chan = (guild[1].channels.cache.filter(c => c.type == "voice") || []).find(c => c.members.map(m => m.id).includes(user.id));
+
+            if (!chan) continue;
+
+            try {
+                this.channelConnection = await chan.join();
+            } catch (e) {
+                console.error(e);
+            }
+        }
     }
 }
 

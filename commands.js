@@ -1,3 +1,27 @@
+/**************************************************************************
+* 
+*  DLMP3 Bot: A Discord bot that plays local mp3 audio tracks.
+*  (C) Copyright 2020
+*  Programmed by Andrew Lee 
+*
+*  (C) Copyright 2021
+*  Programmed by Moritz Jung
+*  
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+* 
+***************************************************************************/
+
 const Discord = require('discord.js');
 const fs = require('fs');
 const config = require('./config.json');
@@ -14,15 +38,14 @@ class Commands {
 
         // Public allowed commands
 
-        //TODO: Fix
         if (commandObj.command == 'help') {
             if (!msg.guild.member(bot.user).hasPermission('EMBED_LINKS')) return msg.reply('**ERROR: This bot doesn\'t have the permission to send embed links please enable them to use the full help.**');
             const helpEmbed = new Discord.MessageEmbed()
                 .setAuthor(`${bot.user.username} Help`, bot.user.avatarURL())
                 .setDescription(`Currently playing \`${this.bot.audioPlayer.currentSong}\`.`)
                 .addField('Public Commands', `${config.prefix}help\n${config.prefix}ping\n${config.prefix}git\n${config.prefix}playing\n${config.prefix}about\n`, true)
-                .addField('Bot Owner Only', `${config.prefix}join\n${config.prefix}resume\n${config.prefix}pause\n${config.prefix}skip\n${config.prefix}leave\n${config.prefix}stop\n`, true)
-                .setFooter('© Copyright 2020 Andrew Lee. Licensed with GPL-3.0.')
+                .addField('Bot Owner Only', `${config.prefix}play\n${config.prefix}join\n${config.prefix}resume\n${config.prefix}pause\n${config.prefix}skip\n${config.prefix}leave\n${config.prefix}stop\n`, true)
+                .setFooter('© Copyright 2021 Moritz Jung. Licensed with GPL-3.0.')
                 .setColor('#0066ff');
 
             msg.channel.send(helpEmbed);
@@ -32,9 +55,8 @@ class Commands {
             msg.reply('Pong!');
         }
 
-        //TODO: Change
         if (commandObj.command == 'git') {
-            msg.reply('This is the source code of this project.\nhttps://github.com/Alee14/DLMP3');
+            msg.reply('This is the source code of this project.\nhttps://github.com/mProjectsCode/DLMP3');
         }
 
         if (commandObj.command == 'playing') {
@@ -43,7 +65,7 @@ class Commands {
 
         //TODO: Change
         if (commandObj.command == 'about') {
-            msg.channel.send('The bot code was created by Andrew Lee (Alee#4277). Written in Discord.JS and licensed with GPL-3.0.');
+            msg.channel.send('The bot code was created by Andrew Lee (Alee#4277) and modified by Moritz Jung (Lemons#5466). Written in Discord.JS and licensed with GPL-3.0.');
         }
 
         if (![config.botOwner].includes(msg.author.id)) return;

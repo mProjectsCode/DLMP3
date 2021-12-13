@@ -1,3 +1,27 @@
+/**************************************************************************
+* 
+*  DLMP3 Bot: A Discord bot that plays local mp3 audio tracks.
+*  (C) Copyright 2020
+*  Programmed by Andrew Lee 
+*
+*  (C) Copyright 2021
+*  Programmed by Moritz Jung
+*  
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+* 
+***************************************************************************/
+
 const Discord = require('discord.js');
 const fs = require('fs');
 const config = require('./config.json');
@@ -39,16 +63,13 @@ class AudioPlayer {
         //     return;
         // }
 
-        let type = commandObj.args[0];
-        let loop = commandObj.args[1] != null && commandObj.args[1] == '-l';
-        console.log(loop);
+        let loop = commandObj.args.includes('-l');
+        // console.log(loop);
 
-        if (type == '-r') {
+        if (commandObj.args.includes('-r')) {
             this.randomAudio = true;
             this.playFile(loop);
-        }
-
-        if (type == '-s') {
+        } else if (commandObj.args.includes('-s')) {
             let files = fs.readdirSync('./music');
 
             let title = commandObj.other[0];
@@ -114,8 +135,8 @@ class AudioPlayer {
             console.log('Music has finished playing.');
             if (loop) {
                 console.log('Looping.');
+                this.playFile(loop, audio);
             }
-            this.playFile(loop, audio);
         });
     }
 }
